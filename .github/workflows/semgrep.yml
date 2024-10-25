@@ -1,0 +1,39 @@
+name: Semgrep Code Scan
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  semgrep-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Semgrep
+        run: pip install semgrep
+
+      # 官方规则库扫描
+      - name: Run Semgrep with JavaScript and Security Audit rules
+        run: |
+          semgrep --config "p/javascript" --config "p/security-audit" .
+
+      # Trail of Bits 规则库扫描
+      - name: Run Semgrep with Trail of Bits rules
+        run: semgrep --config "p/trailofbits" .
+
+      # Elttam 规则库扫描（需先克隆仓库）
+      - name: Clone Elttam Rules Repository
+        run: git clone https://github.com/elttam/semgrep-rules.git
+
+      - name: Run Semgrep with Elttam Rules
+        run: semgrep --config elttam/semgrep-rules/rules-audit .
