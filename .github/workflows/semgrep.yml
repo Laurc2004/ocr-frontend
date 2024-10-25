@@ -36,4 +36,5 @@ jobs:
         run: git clone https://github.com/elttam/semgrep-rules.git
 
       - name: Run Semgrep with Elttam Rules
-        run: semgrep --config elttam/semgrep-rules/rules-audit .
+        run: semgrep --config ./semgrep-rules/rules-audit .
+
